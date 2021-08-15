@@ -180,7 +180,7 @@ commandFile Testing:
     output files created by running the reference executable.
 
     empty.txt - contains nothing. Used to test termination with end of file 
-                condition in isolation.
+                condition in isolation. Not able to be uploaded to GitHub.
 
     typicalinput.txt - contains basic calls to dfs, bfs, and not. Used early 
                        in development to test valid inputs and simple 
@@ -221,70 +221,3 @@ commandFile Testing:
                        Artists - 8, 10, 19. Used to extensively test not, with 
                        nonexistent, short, and long paths from varying 
                        artists.
-
-
-Questions:
-
-1. What is the difference between BFS and DFS? What are their pros and cons?
-
-    BFS (Breadth First Search) is a searching algorithm used to find the
-    shortest path between two nodes in a graph. It does this by checking 
-    the nodes directly connected to the source node, then the nodes connected 
-    to those nodes, and so on until the destination node is found.
-    Pros:
-        - If source and destination are close, bfs finds the path quickly
-        - Checks every single possible path
-    Cons:
-        - If source and destination are far, bfs takes a long time
-    
-    DFS (Depth First Search) is a search algorithm used to find any path 
-    between two nodes (irrespective of length of path). It does this by 
-    following a path in search of the destination. If it reaches a point where
-    it cannot travel farther without searching a node it has already crossed,
-    it tries a different path from the source.
-    Pros:
-        Can sometimes find path very quickly by chance, despite distance 
-        between source and destination
-    Cons:
-        Path can be much longer than it needs to be
-        Time to find destination isn't intuitively predictable
-    
-2. How did you choose to tackle the not command? How does it compare to the 
-   BFS and DFS algorithms?
-  
-   I decided to set the artists excluded as "visited" and then called my 
-   Breadth First Search algorithm. This meant that the algorithm assumed these
-   vertices had been searched and avoided them when traversing the graph.
-  
-3. State what you think your runtime is for each of the commands (excluding
-   quit) and why.
-
-   BFS: O(A) + O(S) A: number of artists(vertices), S: number of songs(edges)
-        My BFS algorithm could check every artist in the graph before reaching
-        the destination, and could check every song in the graph in finding 
-        each Artist's "neighbors" (/collaborators) if the Artist is the
-        farthest Artist from the source, and the last neighbor in the 
-        vector of neighbors from the node connecting it.
-        
-   DFS: O(A) + O(S) A: number of artists(vertices), S: number of songs(edges)
-        My DFS algorithm could check every artist in the graph before reaching
-        the destination, and could check every song in the graph in finding 
-        each Artist's "neighbors" (/collaborators) if the path to the
-        destination requires traversal through the last neighbor in the 
-        vector of neighbors from the source, the node length one away from 
-        source between source and the destination, and so on.
-   
-   Not: O(A) + O(S) A: number of artists(vertices), S: number of songs(edges)
-        My Not algorithm functions by calling BFS, so O(A) + O(S) is its 
-        baseline. The user could choose to exclude every Artist, resulting in 
-        O(A) in marking the Artists as visited, but this reduces the maximum
-        runtime for the traversal, as there are no Artists to visit. It's
-        actually more efficient with more exclusions, as every exclusion
-        doesn't affect the number of artists to explore and reduces the number
-        of songs to be considered.
-      
-
-Time Taken:
-Phase 0, 1      ~14 Hours
-Phase 2         ~10 Hours
-
