@@ -1,0 +1,53 @@
+bfs
+Invalid Artist
+Adam Levine
+bfs
+Justin Bieber
+Nobody
+bfs
+John
+Jack
+dfs
+Invalid Artist
+Adam Levine
+dfs
+Justin Bieber
+Nobody
+dfs
+John
+Jack
+not
+Invalid Artist
+Adam Levine
+Katy Perry
+*
+not
+Justin Bieber
+Nobody
+Kelly Clarkson
+*
+not
+Khalid
+Lady Gaga
+Jared
+*
+not
+No One
+Not An Artist
+Lil Yachty
+*
+not
+IDK
+Mac Miller
+Why Not
+*
+not
+Invalid
+Not in Graph
+Machine Gun Kelly
+*
+not
+Luke
+Ryan
+Brad
+*

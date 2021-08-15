@@ -1,0 +1,290 @@
+README
+
+Comp15 Spring
+Project Two: Six Degrees of Collaboration
+
+Written by: Lucas Maley (lmaley01)
+Date: April 28th, 2021
+
+
+Compile/run:
+     - Compile using
+            make SixDegrees
+     - run executable with
+            ./SixDegrees dataFile [commandFile] [outputFile]
+
+
+Program Purpose:
+
+This homework assignment implements a 'Six Degrees of Separation', the most 
+popular instance of which is the 'Six Degrees of Kevin Bacon'. The 
+implementation allows a user to input a list of Artists (musicians) and songs,
+and allows for a variety of commands to be run which relate to degrees of 
+seperation. 
+
+
+Acknowledgements: 
+
+TAs Grace Fielding - approving the design of my program, sparking more in-depth
+    thought about specific parts of the implementation.
+                   - helping to identify issues raised with valgrind
+
+    Luxi Liu - clarifications regarding specification requirements
+    
+    Alessandra - an insightful discussion about how to properly test edge 
+                 cases and what to consider when creating testing files
+    
+    Sam Russo - clarifying whether failure for outputstream opening is 
+                necessary
+
+Thank you! The coding/debugging process would've been much longer and 
+more tedious without your help, and your efforts throughout the semester 
+have directly helped every student's learning - you're amazing!
+
+C++ Reference - specifically the vector, stack, queue, and file i/o pages.
+
+
+Files: 
+
+CollabGraph.h - Header file for the CollabGraph class.
+    
+CollabGraph.cpp - Implementation of the CollabGraph class.
+    
+SixDegrees.h - Header file for the SixDegrees class.
+
+SixDegrees.cpp - Implementation of the SixDegrees class.
+
+artists.txt (given) - contains example list of artists and songs.
+
+Makefile - Contains rules for compilation / linking of files.
+
+main.cpp - Opens given file and creates instance of a CollabGraph.
+
+Testing Files:
+
+    unit_tests.cpp - Contains unit testing for all functions implemented in 
+    phase 1: populating a graph in the SixDegrees class, reporting the path in
+    the CollabGraph class, and getting a given vertex's neighbors in the 
+    CollabGraph.
+
+    unittestinput.txt - contain basic calls to quit to ensure SD constructors 
+                    in unit test run without user engagement.
+
+    empty.txt - contains nothing, (dataFile & commandFile).
+    
+    typicalinput.txt - contains basic calls to dfs, bfs, and not (commandFile).
+    
+    quitinmiddle.txt - contains a call to 'quit' in middle of other commands 
+                       (commandFile).
+    
+    terminatewitheof.txt - doesn't contain quit command (commandFile)
+    
+    invalidartist.txt - contains artist not in graph in each argument for call
+                        to traversals (commandFile).
+    
+    invalidcommand.txt - contains invalid command. 
+    
+    disconnectedartist.txt - contains artist disconnected from rest of graph in
+                             each argument for call to traversals 
+                             (commandFile).
+    
+    createbfstest.cpp - file used to create bfstestinput.txt (which was 
+                        duplicated and find+replaced to create 
+                        dfstestinput.txt).
+    
+    bfstestinput.txt - contains every valid Artist combination from artist.txt
+                       as bfs command (commandFile).
+    
+    dfstestinput.txt - contains every valid Artist combination from artist.txt
+                       as dfs command (commandFile).
+    
+    nottestinput.txt - contains not input for valid Artists, with 0 excluded 
+                       Artists, 1 excluded Artist, random multiple excluded 
+                       Artists - 8, 10, 19 (commandFile).
+
+
+Data Structures:
+
+Graph - Used to represent the connections between artists, with the artists
+    being represented by a vertex, with the edges connecting them being songs
+    on which both artists have collaborated.
+        Can also be used to represent social networks, game states, and many
+        other representations.
+    
+Vectors - Included in the C++ standard library, this data structure acts as a
+    an array with dynamic size. It is functionally identical to an ArrayList.
+    Used to store the artists excluded by the user in the "not" command.
+
+Stack - A FIFO (First In, First Out) data structure, used to store the path
+        from source to destination during a traversal.
+
+
+Algorithms:
+
+BFS: Breadth First Search, DFS: Depth First Search, ES: Exclusive Search
+
+BFS - Finds the shortest path between source and destination Artists. Iterates
+      through the graph by checking the nodes closest to it first, "layer by
+      layer" - checking nodes of distance 1, distance 2, etc. Sets the 
+      predecessor of each node to record pathing, and avoids loops by marking
+      each node as "seen" after checking it, and only checking the node if 
+      it is unseen.
+      
+DFS - Recurseively finds a path path between source and destination Artists, 
+      without considering length. Marks the node as seen and sets predecessor 
+      before checking if the destination has been reached.
+      
+      Base cases: when the current artist is equal to destination, path found.
+                  when all nodes have been checked, path does not exist.
+      Recursive case: if the current node's neighbors haven't been seen yet,
+      call dfs on them.
+    
+
+ES - Finds the shortest path between source and destination Artists while
+     avoiding excluded artists. Sets excluded artists as seen before calling
+     BFS (see above for description of BFS).
+
+
+Testing:
+
+Unit Testing:
+    I used unit testing to test the helper functions written in SixDegrees 
+    and CollabGraph. This required temporarily making private data members 
+    public so as to access and print them in unit_tests.cpp.
+    
+    constructor_SD - tests the constructor in SixDegrees. Tested using 
+                     artists.txt to create a full graph, and empty.txt to 
+                     create an empty graph. Dependent on print functionality.
+    
+    print_path_SD - tests the print_path function in SixDegrees. Required 
+                     manually setting the predecessor fields of Artists in 
+                     path. Tested on simple path from Alicia Keys to Usher 
+                     to will.i.am.
+    
+    get_vertex_neighbors_CG - tests the get_vertex_neighbors function in 
+                     CollabGraph. Tested on an Artist with multiple neighbors
+                     (Kanye West: 13), an Artist with one neighbor (Da Brat),
+                     and an Artist with no neighbors (Rick Astley).
+    
+    report_path_CG - tests the report_path function in CollabGraph. Required 
+                     manually setting the predecessor fields of Artists in 
+                     path. Tested on multiple Artist path (Kendrick Lamar -> 
+                     Sia -> ZAYN), direct path from source to destination 
+                     (Katy Perry -> DaBaby), no path between Artists (Kanye 
+                     West, Michael Jackson), source = destination (Aretha 
+                     Franklin, Aretha Franklin)
+    
+commandFile Testing:
+    Algorithm testing was conducted through the creation of commandFiles 
+    which were used to create output files which were in turn diffed with
+    output files created by running the reference executable.
+
+    empty.txt - contains nothing. Used to test termination with end of file 
+                condition in isolation.
+
+    typicalinput.txt - contains basic calls to dfs, bfs, and not. Used early 
+                       in development to test valid inputs and simple 
+                       traversals.
+
+    quitinmiddle.txt - contains a call to 'quit' in middle of other commands.
+                       Used to test whether program read beyond call to quit.
+
+    terminatewitheof.txt - doesn't contain quit command. Used to test 
+                           termination with eof in standard context.
+
+    invalidartist.txt - contains artist not in graph in each argument for call
+                        to traversals. Used to test functionality of 
+                        program when given invalid artists, and check for 
+                        discrepancies between invalid source, destination, 
+                        and exceptions.
+    
+    invalidcommand.txt - contains invalid command. Used to test functionality
+                         of program when given invalid commands.
+
+    disconnectedartist - contains artist disconnected from rest of graph in 
+                         each argument for call to traversals. Used to test 
+                         traversal behaviour when called on disconnected 
+                         vertex.
+
+    bfstestinput.txt - contains every valid Artist combination from artist.txt
+                       as bfs command. Used to extensively test bfs, with 
+                       nonexistent, short, and long paths from varying 
+                       artists.
+
+    dfstestinput.txt - contains every valid Artist combination from artist.txt
+                       as dfs command. Used to extensively test dfs, with 
+                       nonexistent, short, and long paths from varying 
+                       artists.
+
+    nottestinput.txt - contains not input for valid Artists, with 0 excluded 
+                       Artists, 1 excluded Artist, random multiple excluded 
+                       Artists - 8, 10, 19. Used to extensively test not, with 
+                       nonexistent, short, and long paths from varying 
+                       artists.
+
+
+Questions:
+
+1. What is the difference between BFS and DFS? What are their pros and cons?
+
+    BFS (Breadth First Search) is a searching algorithm used to find the
+    shortest path between two nodes in a graph. It does this by checking 
+    the nodes directly connected to the source node, then the nodes connected 
+    to those nodes, and so on until the destination node is found.
+    Pros:
+        - If source and destination are close, bfs finds the path quickly
+        - Checks every single possible path
+    Cons:
+        - If source and destination are far, bfs takes a long time
+    
+    DFS (Depth First Search) is a search algorithm used to find any path 
+    between two nodes (irrespective of length of path). It does this by 
+    following a path in search of the destination. If it reaches a point where
+    it cannot travel farther without searching a node it has already crossed,
+    it tries a different path from the source.
+    Pros:
+        Can sometimes find path very quickly by chance, despite distance 
+        between source and destination
+    Cons:
+        Path can be much longer than it needs to be
+        Time to find destination isn't intuitively predictable
+    
+2. How did you choose to tackle the not command? How does it compare to the 
+   BFS and DFS algorithms?
+  
+   I decided to set the artists excluded as "visited" and then called my 
+   Breadth First Search algorithm. This meant that the algorithm assumed these
+   vertices had been searched and avoided them when traversing the graph.
+  
+3. State what you think your runtime is for each of the commands (excluding
+   quit) and why.
+
+   BFS: O(A) + O(S) A: number of artists(vertices), S: number of songs(edges)
+        My BFS algorithm could check every artist in the graph before reaching
+        the destination, and could check every song in the graph in finding 
+        each Artist's "neighbors" (/collaborators) if the Artist is the
+        farthest Artist from the source, and the last neighbor in the 
+        vector of neighbors from the node connecting it.
+        
+   DFS: O(A) + O(S) A: number of artists(vertices), S: number of songs(edges)
+        My DFS algorithm could check every artist in the graph before reaching
+        the destination, and could check every song in the graph in finding 
+        each Artist's "neighbors" (/collaborators) if the path to the
+        destination requires traversal through the last neighbor in the 
+        vector of neighbors from the source, the node length one away from 
+        source between source and the destination, and so on.
+   
+   Not: O(A) + O(S) A: number of artists(vertices), S: number of songs(edges)
+        My Not algorithm functions by calling BFS, so O(A) + O(S) is its 
+        baseline. The user could choose to exclude every Artist, resulting in 
+        O(A) in marking the Artists as visited, but this reduces the maximum
+        runtime for the traversal, as there are no Artists to visit. It's
+        actually more efficient with more exclusions, as every exclusion
+        doesn't affect the number of artists to explore and reduces the number
+        of songs to be considered.
+      
+
+Time Taken:
+Phase 0, 1      ~14 Hours
+Phase 2         ~10 Hours
+
